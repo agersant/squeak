@@ -1,7 +1,13 @@
 [package]
 name = "squeak"
 version = "0.1.0"
+authors = ["Antoine Gersant <antoine.gersant@lesforges.org>"]
+keywords = ["observable", "delegate", "event", "reactive"]
+categories = ["rust-patterns", "data-structures"]
+repository = "https://github.com/agersant/squeak"
+license = "MIT OR Apache-2.0"
 edition = "2021"
+rust-version = "1.60.0"
 
 [dev-dependencies]
 parking_lot = "0.12.1"
