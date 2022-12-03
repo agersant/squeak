@@ -1,9 +1,10 @@
 on: [push, pull_request]
 
-name: Code coverage with grcov
+name: Code coverage
 
 jobs:
   grcov:
+    name: Code coverage
     runs-on: ubuntu-latest
 
     steps:
