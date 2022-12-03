@@ -1,0 +1,7 @@
+[package]
+name = "squeak"
+version = "0.1.0"
+edition = "2021"
+
+[dev-dependencies]
+parking_lot = "0.12.1"
