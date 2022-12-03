@@ -1,4 +1,4 @@
-Squeak is a zero-dependency Rust library defining types which help executing callbacks in response to values being broadcast or mutated.
+Squeak is a zero-dependency Rust library allowing execution of callbacks in response to values being broadcast or mutated.
 
 # Examples
 
