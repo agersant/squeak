@@ -36,7 +36,7 @@
 //! health.mutate(|h| *h -= 10); // Prints "Health is now 90"
 //! health.mutate(|h| *h -= 5);  // Prints "Health is now 85"
 //! health.mutate(|h| *h += 25); // Prints "Health is now 110"
-//!
+//! ```
 //!
 
 mod delegate;
