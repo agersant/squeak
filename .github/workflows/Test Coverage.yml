@@ -1,10 +1,10 @@
 on: [push, pull_request]
 
-name: Code coverage
+name: Test coverage
 
 jobs:
   grcov:
-    name: Code coverage
+    name: Test coverage
     runs-on: ubuntu-latest
 
     steps:
