@@ -28,7 +28,7 @@ fn delegate_does_not_execute_unsubscribed_callbacks() {
             call_count += 1;
             Response::StaySubscribed
         });
-        d.unsubscribe(&subscription);
+        d.unsubscribe(subscription);
         d.notify();
     }
     assert_eq!(call_count, 0);
@@ -45,7 +45,7 @@ fn cannot_unsubscribe_using_subscription_from_a_different_delegate() {
             Response::StaySubscribed
         });
         let s2 = d2.subscribe(|_| Response::StaySubscribed);
-        d1.unsubscribe(&s2);
+        d1.unsubscribe(s2);
         d1.notify();
     }
     assert_eq!(call_count, 1);
@@ -66,9 +66,9 @@ fn unsubscribing_within_callback_is_noop() {
         .replace(Some(d.lock().subscribe(move |_| {
             let old_count = *call_count_clone.lock().borrow();
             *call_count_clone.lock().borrow_mut() = old_count + 1;
-            d_clone
-                .lock()
-                .unsubscribe(subscription_clone.lock().deref().borrow().as_ref().unwrap());
+            if let Some(subscription) = subscription_clone.lock().deref().borrow_mut().take() {
+                d_clone.lock().unsubscribe(subscription);
+            }
             Response::StaySubscribed
         })));
 

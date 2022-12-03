@@ -24,7 +24,7 @@ fn observable_no_longer_notifies_after_unsubscribe() {
             Response::StaySubscribed
         });
         o.mutate(|value| *value = 42);
-        o.unsubscribe(&s);
+        o.unsubscribe(s);
         o.mutate(|value| *value = 43);
     }
     assert_eq!(call_count, 1);
