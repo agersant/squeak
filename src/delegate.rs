@@ -11,21 +11,22 @@ type SubscriptionId = usize;
 
 static NEXT_SUBSCRIPTION_ID: AtomicUsize = AtomicUsize::new(0);
 
-/// This type holds maintains a list of callbacks that can be explicitely triggered
+/// Maintains a list of callbacks that can be explicitely triggered
 /// by calling [`Delegate::broadcast`].
 #[derive(Default)]
 pub struct Delegate<'d, T> {
     pub(crate) subscriptions: RefCell<HashMap<SubscriptionId, BoxedCallback<'d, T>>>,
 }
 
-/// This type represents a subscription created via [`Delegate::subscribe()`] or [`crate::Observable::subscribe()`]
-/// It can be passed to [`Delegate::unsubscribe()`] or [`crate::Observable::unsubscribe()`] to cancel the subscription.
+/// Represents a subscription created via [`Delegate::subscribe`] or [`Observable::subscribe`](crate::Observable::subscribe).
+///
+/// It can be passed to [`Delegate::unsubscribe`] or [`Observable::unsubscribe`](crate::Observable::unsubscribe) to cancel the subscription.
 #[derive(Eq, Hash, PartialEq)]
 pub struct Subscription {
     id: SubscriptionId,
 }
 
-/// This type must be returned by `Delegate` and `Observable` subscription callbacks.
+/// Returned by [`Delegate`] and [`Observable`](crate::Observable) subscription callbacks.
 /// Depending on the value returned, the subscription will stay active or be cancelled.
 pub enum Response {
     StaySubscribed,
@@ -41,6 +42,7 @@ impl<'d, T> Delegate<'d, T> {
 
     /// Registers a new callback that will be called when this delegate broadcasts
     /// a new value.
+    ///
     /// ```rust
     /// use squeak::{Delegate, Response};
     ///
@@ -51,6 +53,10 @@ impl<'d, T> Delegate<'d, T> {
     /// });
     /// on_damage_received.broadcast(5); // Prints "Received 5 damage"
     /// ```
+    ///
+    /// The output of the callback function determines whether it will be called
+    /// again when [`broadcast`] is called in the future.
+    ///
     pub fn subscribe<C: FnMut(&T) -> Response + 'd + Send>(&self, callback: C) -> Subscription {
         let id = NEXT_SUBSCRIPTION_ID.fetch_add(1, Ordering::SeqCst);
         let subscription = Subscription { id };
@@ -61,6 +67,7 @@ impl<'d, T> Delegate<'d, T> {
     }
 
     /// Removes a callback that was previously registered.
+    ///
     /// ```rust
     /// use squeak::{Delegate, Response};
     ///
@@ -73,14 +80,15 @@ impl<'d, T> Delegate<'d, T> {
     /// on_damage_received.unsubscribe(subscription);
     /// on_damage_received.broadcast(10); // Does not print anything
     /// ```
-    /// Attemption to unsubscribe using a [`Subscription`] that was created by a different [`Delegate`] has no effect.
-    /// Attempting to unsubscribe multiple times using the same callback has no effect.
-    /// Attempting to unsubscribe from within callback function has no effect (and is tricky to write in a way that compiles).
+    /// - Attempting to unsubscribe using a [`Subscription`] that was created by a different [`Delegate`] has no effect.
+    /// - Attempting to unsubscribe a [`Subscription`] multiple times has no effect.
+    /// - Attempting to unsubscribe from within callback function has no effect.
     pub fn unsubscribe(&self, subscription: Subscription) {
         self.subscriptions.borrow_mut().remove(&subscription.id);
     }
 
     /// Executes all registered callbacks, providing `value` as their argument.
+    ///
     /// ```rust
     /// use squeak::{Delegate, Response};
     ///
@@ -120,6 +128,7 @@ impl<'d, T> Delegate<'d, T> {
 
 impl Delegate<'_, ()> {
     /// This convenience function broadcasts the unit type on delegates with no payload.
+    ///
     /// ```rust
     /// use squeak::{Delegate, Response};
     ///

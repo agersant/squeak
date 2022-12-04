@@ -2,8 +2,7 @@ use std::{fmt::Debug, ops::Deref};
 
 use crate::{Delegate, Response, Subscription};
 
-/// Observables are a wrapper type which owns a value, and executes subscription callbacks
-/// every time a call is made to change the value.
+/// Wrapper type which owns a value and executes callbacks every time a call is made to mutate the value.
 ///
 /// ``` rust
 /// use squeak::{Observable, Response};
@@ -29,6 +28,7 @@ pub struct Observable<'o, T> {
 
 impl<'o, T> Observable<'o, T> {
     /// Creates a new observable with an initial value
+    ///
     /// ```rust
     /// use squeak::Observable;
     /// let name = Observable::new(String::from("DefaultName"));
@@ -43,6 +43,7 @@ impl<'o, T> Observable<'o, T> {
     }
 
     /// Registers a new callback that will be called when the value contained in this observable is mutated.
+    ///
     /// ```rust
     /// use squeak::{Observable, Response};
     ///
@@ -52,11 +53,15 @@ impl<'o, T> Observable<'o, T> {
     ///     Response::StaySubscribed
     /// });
     /// ```
+    ///
+    /// The output of the callback function determines whether it will be called
+    /// again when [`broadcast`] is called in the future.
     pub fn subscribe<C: FnMut(&T) -> Response + 'o + Send>(&self, callback: C) -> Subscription {
         self.delegate.subscribe(callback)
     }
 
     /// Removes a callback that was previously registered.
+    ///
     /// ```rust
     /// use squeak::{Observable, Response};
     ///
@@ -65,6 +70,7 @@ impl<'o, T> Observable<'o, T> {
     ///     println!("Health is now {updated_health}");
     ///     Response::StaySubscribed
     /// });
+    ///
     /// health.unsubscribe(subscription);
     /// ```
     pub fn unsubscribe(&self, subscription: Subscription) {
@@ -72,9 +78,25 @@ impl<'o, T> Observable<'o, T> {
     }
 
     /// Returns a reference to a delegate that will execute subscription functions
-    /// when the observable is mutated. This is useful when writing a struct with
-    /// a observable member, where users of the struct can subscribe to updates
-    /// but not directly access the observable.
+    /// when the observable is mutated. This is useful when writing a struct that has
+    /// an observable member, but users of the struct should only have access to its
+    /// value by subscribing.
+    ///
+    /// ```rust
+    /// use squeak::{Observable};
+    ///
+    /// struct MyStruct {
+    ///   observe_only: Observable<u32>,
+    /// }
+    ///
+    /// impl MyStruct {
+    ///   pub fn delegate(&self) -> &Delegate<u32> {
+    ///     self.observe_only.delegate()
+    ///   }
+    /// }
+    ///
+    /// ```
+    ///
     pub fn delegate(&self) -> &Delegate<'o, T> {
         &self.delegate
     }
@@ -82,6 +104,7 @@ impl<'o, T> Observable<'o, T> {
     /// Execute a function which may mutate the value contained in this observable.
     /// Subscription callbacks will be executed regardless of what happens inside
     /// the `mutation` function.
+    ///
     /// ```rust
     /// use squeak::Observable;
     ///
@@ -89,6 +112,7 @@ impl<'o, T> Observable<'o, T> {
     /// name.mutate(|n| n.append("X"));
     /// name.mutate(|n| n.append("Y"));
     /// name.mutate(|n| n.append("Z"));
+    ///
     /// assert_eq!(*name.as_str(), "DefaultNameXYZ");
     /// ```
     pub fn mutate<M>(&mut self, mutation: M)

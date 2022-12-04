@@ -1,11 +1,11 @@
-//! This library provides a utility types to execute callbacks in response to
+//! This library provides types allowing execution of callbacks in response to
 //! values being broadcast or mutated.
 //!
 //! <br>
 //!
 //! # Manually broadcast values
 //!
-//! Delegates can be used to manually broadcast values to subscribers.
+//! Delegates can be used to manually broadcast values to subscribers:
 //!
 //! ```rust
 //! use squeak::{Delegate, Response};
@@ -22,6 +22,8 @@
 //! ```
 //!
 //! # Automatically broadcast when a variable is mutated
+//!
+//! Observables own a value and execute callbacks whenever the value is mutated:
 //!
 //! ```rust
 //!
