@@ -12,14 +12,14 @@ type SubscriptionId = usize;
 static NEXT_SUBSCRIPTION_ID: AtomicUsize = AtomicUsize::new(0);
 
 /// This type holds maintains a list of callbacks that can be explicitely triggered
-/// by calling [`broadcast`].
+/// by calling [`Delegate::broadcast`].
 #[derive(Default)]
 pub struct Delegate<'d, T> {
     pub(crate) subscriptions: RefCell<HashMap<SubscriptionId, BoxedCallback<'d, T>>>,
 }
 
-/// This type represents a subscription created via [`Delegate::subscribe()`] or [`Observable::subscribe()`]
-/// It can be passed to [`unsubscribe()`] to cancel the subscription.
+/// This type represents a subscription created via [`Delegate::subscribe()`] or [`crate::Observable::subscribe()`]
+/// It can be passed to [`Delegate::unsubscribe()`] or [`crate::Observable::unsubscribe()`] to cancel the subscription.
 #[derive(Eq, Hash, PartialEq)]
 pub struct Subscription {
     id: SubscriptionId,

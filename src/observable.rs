@@ -82,7 +82,7 @@ impl<'o, T> Observable<'o, T> {
     /// Execute a function which may mutate the value contained in this observable.
     /// Subscription callbacks will be executed regardless of what happens inside
     /// the `mutation` function.
-    /// /// ```rust
+    /// ```rust
     /// use squeak::Observable;
     ///
     /// let name = Observable::new(String::from("DefaultName"));
