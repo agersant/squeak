@@ -1,4 +1,4 @@
-use parking_lot::ReentrantMutex;
+use parking_lot::{Mutex, ReentrantMutex};
 use std::{cell::RefCell, ops::Deref, sync::Arc};
 
 use squeak::{Delegate, Response};
@@ -54,8 +54,8 @@ fn cannot_unsubscribe_using_subscription_from_a_different_delegate() {
 #[test]
 fn unsubscribing_within_callback_is_noop() {
     let d = Arc::new(ReentrantMutex::new(Delegate::new()));
-    let call_count = Arc::new(ReentrantMutex::new(RefCell::new(0)));
-    let subscription = Arc::new(ReentrantMutex::new(RefCell::new(None)));
+    let call_count = Arc::new(Mutex::new(RefCell::new(0)));
+    let subscription = Arc::new(Mutex::new(RefCell::new(None)));
 
     let d_clone = d.clone();
     let call_count_clone = call_count.clone();
