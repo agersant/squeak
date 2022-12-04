@@ -83,14 +83,14 @@ impl<'o, T> Observable<'o, T> {
     /// value by subscribing.
     ///
     /// ```rust
-    /// use squeak::{Observable};
+    /// use squeak::{Delegate, Observable};
     ///
-    /// struct MyStruct {
-    ///   observe_only: Observable<u32>,
+    /// struct MyStruct<'a> {
+    ///   observe_only: Observable<'a, u32>,
     /// }
     ///
-    /// impl MyStruct {
-    ///   pub fn delegate(&self) -> &Delegate<u32> {
+    /// impl<'a> MyStruct<'a> {
+    ///   pub fn delegate(&self) -> &Delegate<'a, u32> {
     ///     self.observe_only.delegate()
     ///   }
     /// }
@@ -108,12 +108,12 @@ impl<'o, T> Observable<'o, T> {
     /// ```rust
     /// use squeak::Observable;
     ///
-    /// let name = Observable::new(String::from("DefaultName"));
-    /// name.mutate(|n| n.append("X"));
-    /// name.mutate(|n| n.append("Y"));
-    /// name.mutate(|n| n.append("Z"));
+    /// let mut name = Observable::new(String::from("DefaultName"));
+    /// name.mutate(|n| n.push_str("X"));
+    /// name.mutate(|n| n.push_str("Y"));
+    /// name.mutate(|n| n.push_str("Z"));
     ///
-    /// assert_eq!(*name.as_str(), "DefaultNameXYZ");
+    /// assert_eq!(name.as_str(), "DefaultNameXYZ");
     /// ```
     pub fn mutate<M>(&mut self, mutation: M)
     where
