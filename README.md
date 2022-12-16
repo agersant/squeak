@@ -9,7 +9,7 @@
 [docs_badge]: https://img.shields.io/badge/docs.rs-squeak-blue
 [docs_link]: https://docs.rs/squeak/latest/squeak/
 
-Squeak is a zero-dependency Rust library allowing execution of callbacks in response to values being broadcast or mutated.
+Squeak is a zero-dependency Rust library to facilitate event-driven programming.
 
 # Examples
 
