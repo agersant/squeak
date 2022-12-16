@@ -2,7 +2,7 @@
 
 [![build_badge]][build_link] [![crates.io_badge]][crates.io_link] [![docs_badge]][docs_link]
 
-[build_badge]: https://img.shields.io/github/workflow/status/agersant/squeak/Continuous%20integration/master
+[build_badge]: https://img.shields.io/github/actions/workflow/status/agersant/squeak/CI.yml?branch=master
 [build_link]: https://github.com/agersant/squeak/actions/workflows/CI.yml?query=branch%3A+branch%3Amaster++
 [crates.io_badge]: https://img.shields.io/badge/crates.io-squeak-green
 [crates.io_link]: https://crates.io/crates/squeak
