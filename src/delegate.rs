@@ -3,13 +3,13 @@ use std::{
     cell::RefCell,
     collections::HashMap,
     fmt::Debug,
-    sync::atomic::{AtomicUsize, Ordering},
+    sync::atomic::{AtomicU64, Ordering},
 };
 
 type BoxedCallback<'a, T> = Box<dyn FnMut(&T) -> Response + 'a + Send>;
-type SubscriptionId = usize;
+type SubscriptionId = u64;
 
-static NEXT_SUBSCRIPTION_ID: AtomicUsize = AtomicUsize::new(0);
+static NEXT_SUBSCRIPTION_ID: AtomicU64 = AtomicU64::new(0);
 
 /// Maintains a list of callbacks that can be explicitely triggered
 /// by calling [`Delegate::broadcast`].
