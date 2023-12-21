@@ -1,4 +1,5 @@
-use std::{fmt::Debug, ops::Deref};
+use alloc::fmt::Debug;
+use core::ops::Deref;
 
 use crate::{Delegate, Response, Subscription};
 

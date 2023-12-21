@@ -1,10 +1,8 @@
-use std::{
-    borrow::Borrow,
-    cell::RefCell,
-    collections::HashMap,
-    fmt::Debug,
-    sync::atomic::{AtomicU64, Ordering},
-};
+use alloc::vec::Vec;
+use alloc::{borrow::Borrow, boxed::Box, collections::BTreeMap, fmt::Debug};
+
+use core::cell::RefCell;
+use core::sync::atomic::{AtomicU64, Ordering};
 
 type BoxedCallback<'a, T> = Box<dyn FnMut(&T) -> Response + 'a + Send>;
 type SubscriptionId = u64;
@@ -15,7 +13,7 @@ static NEXT_SUBSCRIPTION_ID: AtomicU64 = AtomicU64::new(0);
 /// by calling [`Delegate::broadcast`].
 #[derive(Default)]
 pub struct Delegate<'d, T> {
-    pub(crate) subscriptions: RefCell<HashMap<SubscriptionId, BoxedCallback<'d, T>>>,
+    pub(crate) subscriptions: RefCell<BTreeMap<SubscriptionId, BoxedCallback<'d, T>>>,
 }
 
 /// Represents a subscription created via [`Delegate::subscribe`] or [`Observable::subscribe`](crate::Observable::subscribe).
@@ -36,7 +34,7 @@ pub enum Response {
 impl<'d, T> Delegate<'d, T> {
     pub fn new() -> Self {
         Self {
-            subscriptions: RefCell::new(HashMap::new()),
+            subscriptions: RefCell::new(BTreeMap::new()),
         }
     }
 
@@ -148,7 +146,7 @@ impl<T> Debug for Delegate<'_, T>
 where
     T: Debug,
 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut alloc::fmt::Formatter<'_>) -> alloc::fmt::Result {
         f.debug_struct("Delegate")
             .field(
                 "subscriptions",

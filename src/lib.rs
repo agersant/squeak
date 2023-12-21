@@ -40,6 +40,8 @@
 //! health.mutate(|h| *h += 25); // Prints "Health is now 110"
 //! ```
 //!
+#![no_std]
+extern crate alloc;
 
 mod delegate;
 mod observable;
