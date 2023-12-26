@@ -1,6 +1,6 @@
 [package]
 name = "squeak"
-version = "0.1.0"
+version = "0.2.0"
 description = "Library providing types allowing execution of callbacks in response to values being broadcast or mutated."
 authors = ["Antoine Gersant <antoine.gersant@lesforges.org>"]
 keywords = ["observable", "delegate", "event", "reactive", "no_std"]
